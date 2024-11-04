@@ -1,0 +1,76 @@
+#+title: Reading Notes
+
+* Accel-Sim_An_Extensible_Simulation_Framework_for_Validated_GPU_Modeling
+** key idea: Made a general gpu simulator program that can be used to accurately model GPU workloads
+
+* AccelWattch_A_power_modeling_framework_for_modern_GPUs
+** Key ideas: A software for correctly modeling booth static and dynamic power used by GPUs. Also models cycle-level power modeling tools
+
+* Analyzing and leveraging shared L1 Caches in GPUs
+** Key Idea: L1 caches are typically private, but this results in wasted performance with applications with high data resuse. The paper propses a shared L1 cache, shows that there is a large performance increase when applications have high data reuse, and that appications without high data reuse are not hit with a serious performance penalty. The paper discusses the methods and challenges of implementing a shared L1 cache in hardware, and various optimizations that are needed.
+
+* Analyzing CUDA workloads using a detailed GPU simulator
+** Key idea: Study 12 nontrivial cuda workloads compared to CPU serial. performs test on microarchitecture optimizations
+
+* an_llvm_based_open_source_compiler_for_NVIDIA_gpus
+** Key idea: open-source compiler of NVIDIA's machiene assembly code. This allows for optimizations for low-level performance research
+
+* Cache_coherence_for_GPU_architectures
+** key idea: Describes Temporal Coherence, a process that eliminates all coherence traffic and protocol races
+
+*  decoding_CUDA_binary
+** key idea: develops a method for decoding the ISA of NVIDIA GPUs and generating assemblers for various GPU architetures
+
+* designing_virtual_memory_systems_of_MCM_GPUs
+** Problem: Transistor technology is slowing and multi-chip module designs have been propsed to stop this. The disaaggregated nature of MCM GPUs leads to non-uniformity
+** Solution: Explore virtual memory solutions that reduce accesses to page table entries, leveverage aggregate TLB capacity, and limit the number of L2 TLB lookups
+
+* dissecting_gpu_memory_hierarchy_through_microbenchmarking
+** Key idea: develop a microbenchmarking approach to expose unknown memory system characteristics
+
+* Dissecting_the_CUDA_scheduling_hierarchy_a_Performance_and_Predictability_Perspective
+** Corrects and consilidates previously pulished information about NVIDIA's scheduling mechanisms, which are closed source.
+
+* finding_inputs_that_trigger_floating_point_exceptions_in_gpus_via_Bayesian_optimizations
+** Apply Baysian optimization on functions on the GPU (without knowing the source code) to find floating point exceptions. Floating point exceptions are difficult for the GPU to detect, as CUDA does not provide methods for finding exceptions. This software is mainly useful for debugging functions
+
+* get_out_of_the_valley_power-efficient_address_mapping_for_gpus
+** develops a high efficiency address mapping policy on the GPU that follows these parameters: low-entropy address bits are mapped to rows - to exploit row buffer locality. and High-entropy bits are mapped to channels and banks - to explot parallelism.
+High-entropy -> bit is likely to change
+low-entropy -> bit is unlikely to change
+GPU memory is organized as follows channels, banks, rows, and columns.
+
+* Hardware transactional memroy for GPU architectures
+** Problem: threas in different blocks can only communicate via global memory. This can be done with atomic operations but is prone to deadlocks
+** Solution: extend GPUs to support transactional memory.
+Transactional memory - work with transactions instead of locks to achieve concurrency
+
+* modeling_deep_learning_accelerator_enabled_gpus
+** Study NVIDIA's tensor codes and develops an architectural model of them
+
+* owl_cooperative_thread_array_aware_scheduling_techniques_for_improving_gpgpu_performance
+** GPUs suffer from high periods of inactive times, which results in performance loss:
+3 characteristics cause this:
+1) on-chip memory and register files are limiting factors on parallelism
+2) high control flow divergence
+3) inefficient scheduling mechanisms
+** Owl (copperatice thread array aware warp scheduling policy) prioritizes CTAs (thread blocks) that might share resources over other CTAs when lartge amounts are scheudled
+
+* RCoal_mitigating_GPU_timing_attacks_via_subwarp-based_randomized_coalescing_techniques
+** GPUs use intrawarp memory access coalescing, which mergers memory requests from various threads in a warp into as few chache lines as possible. This has security flaws, as attackers can correlated execution time and coalesced threads
+This paper suggest a method which causes a slight performance hit but results in randomizing the coalescing logic
+
+* Sparse_tensor_core_algorithm_and_hardware_co-design_for_vector-wise_sparse_neural_networks_on_modern_gpus
+** tensor cores are optimized for dense matricies, sparse matricies do not have optimal performance
+proposes an algorithm and hardware to accelerate sparse matrix multiply on GPUs. This is a pruning algorithm that improves workload balance. The hardware addition allow tensor cores to adapt to sparse matricies
+
+* Thread_block_compaction_for_efficient_SIMT_control_flow
+** Key idea: uses thread block compaction for control flow optimization. Proposes the sharing of resources in for warps in a block
+
+* why_gpus_are_slow_at_executing_NFAs_and_how_to_make_them_faster
+** Non-deterministic Finite Automata (NFA) do not perform well on GPUs due to excessive data movement in the GPU memory-hierarchy. This can be alleviated with privatization of reads to reduce excessive data movement. This has the side effect of this is poor compute utilization due to GPU core being wasted on idle NFA states. They propose a dynamic scheme that effectigvely balances compute utilization with reduced memory usage
+
+* Categories:
+** Memory models:
+** Performance:
+** Architecture:
