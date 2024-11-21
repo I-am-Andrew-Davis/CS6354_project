@@ -4,10 +4,10 @@
 ** key idea: Made a general gpu simulator program that can be used to accurately model GPU workloads
 
 * AccelWattch_A_power_modeling_framework_for_modern_GPUs
-** Key ideas: A software for correctly modeling booth static and dynamic power used by GPUs. Also models cycle-level power modeling tools
+** Key ideas: A software for correctly modeling both static and dynamic power used by GPUs. Also models cycle-level power modeling tools
 
 * Analyzing and leveraging shared L1 Caches in GPUs
-** Key Idea: L1 caches are typically private, but this results in wasted performance with applications with high data resuse. The paper propses a shared L1 cache, shows that there is a large performance increase when applications have high data reuse, and that appications without high data reuse are not hit with a serious performance penalty. The paper discusses the methods and challenges of implementing a shared L1 cache in hardware, and various optimizations that are needed.
+** Key Idea: L1 caches are typically private, but this results in wasted performance with applications with high data resuse. The paper proposes a shared L1 cache, shows that there is a large performance increase when applications have high data reuse, and that appications without high data reuse are not hit with a serious performance penalty. The paper discusses the methods and challenges of implementing a shared L1 cache in hardware, and various optimizations that are needed.
 
 * Analyzing CUDA workloads using a detailed GPU simulator
 ** Key idea: Study 12 nontrivial cuda workloads compared to CPU serial. performs test on microarchitecture optimizations
@@ -22,8 +22,8 @@
 ** key idea: develops a method for decoding the ISA of NVIDIA GPUs and generating assemblers for various GPU architetures
 
 * designing_virtual_memory_systems_of_MCM_GPUs
-** Problem: Transistor technology is slowing and multi-chip module designs have been propsed to stop this. The disaaggregated nature of MCM GPUs leads to non-uniformity
-** Solution: Explore virtual memory solutions that reduce accesses to page table entries, leveverage aggregate TLB capacity, and limit the number of L2 TLB lookups
+** Problem: Transistor technology is slowing and multi-chip module designs have been proposed to stop this. The disaaggregated nature of MCM GPUs leads to non-uniformity
+** Solution: Explore virtual memory solutions that reduce accesses to page table entries, leverage aggregate TLB capacity, and limit the number of L2 TLB lookups
 
 * dissecting_gpu_memory_hierarchy_through_microbenchmarking
 ** Key idea: develop a microbenchmarking approach to expose unknown memory system characteristics
