@@ -54,3 +54,12 @@ For shared memory, they found that all devices had 32 memory banks, with Fermi a
 Interestingly, they also found that the efficiency of shared memory throughput was, 57.4\% on Fermi, 32.5\% on Kepler and 83.9\% on Maxwell.
 Suggesting that a bank size of 4 bytes is optimal.
 They also suggest that bank conflicts are the primary reason for poor memory latency when using shared memory on the GPU.
+
+Virtual memory gives the illusion of a larger memory space than is physically available.
+This design does not burden programmers with having to track physical memory.
+GPUs now use multi-chip modules (MCM) to increase performance, however, this design can have implications on the virtual memory~\cite{Pratheek2023}.
+Pratheek et al. explores the ideal design of a virtual memory system for a GPU that utilizes MCM.
+They find that the partitioned nature of a MCM design leads to different design, and not one design works for all applications.
+Mainly, the chief design consideration is to have a shared L2 TLB or a private L2 TLB.
+Pratheek et al. proposed a MCM-aware virtual memory system which, "achieves a balance between using aggregate L2 TLB capacity, local L2 TLB accesses, and local page table entry accesses on a page walk.''~\cite{Pratheek2023}
+This balance is achieved through intelligent scheduling of warps and data placement in MCM GPUs.
