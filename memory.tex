@@ -40,8 +40,11 @@ Kilo transactional memory works at the word-level, this is in contrast to other 
 The authors found that this approach increased performance of most applications.
 
 Cache coherence is the concept that all copies of data in individual caches are consistent.
-GPUs lack cache coherence due to their architectural design~\cite{Singh2013}, though cache coherence can be achieved by disabling private caches.
-Obviously, disabling the L1 cache to achieve coherence comes at a cost of performance. Singh et al. investigated a method called ``Temporal Coherence'' that provides coherent L1 caches and can improve execution time of GPGPU applications by 85\%.
+Cache coherent models are well established, and many high-level languages depend on these models~\cite{Singh2013}.
+Unfortunately, GPUs lack cache coherence due to their architectural design~\cite{Singh2013}, and applications that rely on coherent caches must disable the L1 cache.
+Obviously, disabling the L1 cache to achieve coherence comes at a cost of performance.
+
+Singh et al. investigated a method called ``Temporal Coherence'' that provides coherent L1 caches and can improve execution time of GPGPU applications by 85\%. This is a timestamp based coherence framework, which helps to eliminate coherence traffic caused by 100s of threads accessing memory and helps eliminate protocol races~\cite{Singh2013}.
 
 One of the many challenges of understanding GPUs is understanding precisely how the memory hierarchy works.
 This is a difficult task, as many GPU manufacturers do not make this information publicly available.
@@ -63,3 +66,25 @@ They find that the partitioned nature of a MCM design leads to different design,
 Mainly, the chief design consideration is to have a shared L2 TLB or a private L2 TLB.
 Pratheek et al. proposed a MCM-aware virtual memory system which, "achieves a balance between using aggregate L2 TLB capacity, local L2 TLB accesses, and local page table entry accesses on a page walk.''~\cite{Pratheek2023}
 This balance is achieved through intelligent scheduling of warps and data placement in MCM GPUs.
+
+One of the problems with designing efficient address mapping schemes for GPUs is accounting for bit entropy~\cite{Liu2018}.
+Liu et al.~\cite{Liu2018} found that the address bit entropy distribution did not follow a typical CPU bit entropy distribution.
+Bit entropy is defined as high if the bit is likely to change and low if the bit is not likely to change.
+Liu et al. notes that the entropy distribution is highly application dependent, this is in contrast to a CPU, in which typically the least significant bit is likely to have the highest entropy.
+Additionally, these distributions tend to change while the application is running.
+This problem is due to the GPUs highly parallelized architecture, in which thousands of threads might be accessing memory addresses concurrently.
+
+The ideal memory addressing scheme would have row bits change the least, for row buffer locality, while the channel and bank bits should change the most, for uniform memory distribution~\cite{Liu2018}.
+Liu et al. propsed the ``Page Address Entropy'' (PAE) mapping scheme, which fulfills these criteria, is easily translated into hardware with an array of XOR gates, and results in performance gains of around 1.25.
+The key idea of PAE.
+
+Due to the memory performance variability of applications on GPUs, it is often the case that algorithms need specific tuning to perform well on GPUs.
+Liu et al.~\cite{Liu2020} shows this clearly with an example of how to increase performance of Non-deterministic Finite Automata (NFA). NFAs are naturally parallel, though they do not perform well on GPUs. Liu et al. found the main cause of this is excessive data movement and poor-compute utilization. This section will only talk about the data movement findings.
+
+Liu et al. solved the data movement issue by privatizing reads using the GPUs on-chip memory.
+They also made further optimizations that improve the NFA algorithm on the GPU by reducing redundant memory, reducing global memory accesses, and cleverly turning read operations into computations.
+This example shows that often algorithms that would theoretically perform well on the GPU (NFAs), need to be reworked in order to take full advantage of the GPUs highly parallel memory structure.
+
+In summary, GPU memory systems share similarities with CPU memory systems, but also have stark differences.
+Ideas like a hierarchy of memory are similar to a CPU, but the specific policies of the hierarchy of memory, such as a private or public L1 cache, are typically different than a CPU.
+Much work has gone into finding the ideal memory system for GPUs, such as address mapping policies, write-through or write-back policies, coherent caches, and memory coalescing are all active areas of this research.

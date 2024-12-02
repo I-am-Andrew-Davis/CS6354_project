@@ -55,6 +55,7 @@ Transactional memory - work with transactions instead of locks to achieve concur
 2) high control flow divergence
 3) inefficient scheduling mechanisms
 ** Owl (copperatice thread array aware warp scheduling policy) prioritizes CTAs (thread blocks) that might share resources over other CTAs when lartge amounts are scheudled
+** NOT IN PAPER
 
 * RCoal_mitigating_GPU_timing_attacks_via_subwarp-based_randomized_coalescing_techniques
 ** GPUs use intrawarp memory access coalescing, which mergers memory requests from various threads in a warp into as few chache lines as possible. This has security flaws, as attackers can correlated execution time and coalesced threads
@@ -68,7 +69,8 @@ proposes an algorithm and hardware to accelerate sparse matrix multiply on GPUs.
 ** Key idea: uses thread block compaction for control flow optimization. Proposes the sharing of resources in for warps in a block
 
 * why_gpus_are_slow_at_executing_NFAs_and_how_to_make_them_faster
-** Non-deterministic Finite Automata (NFA) do not perform well on GPUs due to excessive data movement in the GPU memory-hierarchy. This can be alleviated with privatization of reads to reduce excessive data movement. This has the side effect of this is poor compute utilization due to GPU core being wasted on idle NFA states. They propose a dynamic scheme that effectigvely balances compute utilization with reduced memory usage
+** Non-deterministic Finite Automata (NFA) do not perform well on GPUs due to excessive data movement in the GPU memory-hierarchy. This can be alleviated with privatization of reads to reduce excessive data movement. This has the side effect of this is poor compute utilization due to GPU core being wasted on idle NFA states. They propose a dynamic scheme that effectively balances compute utilization with reduced memory usage
+** NOT IN PAPER
 
 * Categories:
 ** Memory models:
