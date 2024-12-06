@@ -53,14 +53,18 @@ Some of the state of the art implementations of GPU memory models to be discusse
 \include{memory}
 \include{simulators}
 \section{Conclusion}
-We have overviewed the key components of the GPU, those being, the underlying architecture, the memory models, and the simulators used to test new GPU architecture ideas.
+We have written an overview of the key components of the GPU, those being, the underlying architecture, the memory models, and the simulators used to test new GPU architecture ideas.
 We have also relayed some of the state of the art findings from various academic papers on these concepts.
 The following three paragraphs are a brief summary of the concepts detailed in Sections II to IV. The content is organized in the following way: architecture, memory models, and simulators.
 
+Inter-warp memory coalescing was found to be highly efficient by Bakhoda.
+Ibrahim found performance gains when shifting from a private L1 cache to a shared L1 cache.
+Fung describes a transactional memory policy that is superior to traditional lock-based synchronizations.
+Singh explored a method that enabled cache coherence on the GPU, and found their method improved performance of some applications.
+Mei and Chu deliver precise experimental findings of the Fermi, Kepler, and Maxwell GPU architectures that were not disclosed by NVIDIA; these findings are primarily on cache behavior, such as eviction policies and cache line size.
+Pratheek found a virtual memory system design that improves memory performance for GPUs that use MCM technologies.
+Lastly, Liu explored memory addressing modes that perform well on GPUs, these modes are application dependent and take into account an addresses bit entropy region.
 
-
-
-%%%%%%% -- PAPER CONTENT ENDS -- %%%%%%%%
 \clearpage
 \appendix
 \section{Notes}
