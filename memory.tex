@@ -3,7 +3,7 @@ GPU memory models have a similar design to CPU memory models in the sense that t
 GPUs typically have a register file, L1 and L2 cache, and DRAM (Global) memories, these can be thought of as similar to a CPUs.
 Additionally, GPUs typically have a shared memory and a constant/texture memory, as well as an interconnect network that connects to the CPU.
 The register file, L1 and L2 cache, and shared memory are located on the GPU chip, while the constant/texture and DRAM memory are located off chip.
-GPUs also have multiple levels of transnational lookaside buffers (TLBs) to decrease the time for converting a virtual address to a physical one.
+GPUs also have multiple levels of translational lookaside buffers (TLBs) to decrease the time for converting a virtual address to a physical one.
 
 GPUs make use of many streaming multiprocessors (SMs), which can be thought of as similar to a core of a CPU.
 Each SM has a private L1 cache and a shared memory.
@@ -22,10 +22,10 @@ They found that randomizing the granularity of the intra-warp coalescing and ran
 This work only focused on intra-warp coalescing, but the authors suggest it could be implemented in all levels of the memory hierarchy.
 
 As previously mentioned, GPU L1 caches are typically private.
-This design has the drawback of duplication data, e.i. two separate L1 caches might contain the same information.
+This design has the drawback of duplication data, i.e. two separate L1 caches might contain the same information.
 Ibrahim et al. investigated a shared L1 cache design, in which only one, unique, copy of data was stored in only one L1 cache~\cite{Ibrahim2020}.
-Ibrahim found that this method achieved higher cache hit rates at the cost of latency to some applications.
-This was achieved by mapping specific ranges of the address space to specific L1 caches.
+Ibrahim et al. found that a shared L1 cache design achieved higher cache hit rates at the cost of latency to some applications.
+This was achieved by mapping specific ranges of the address space to specific L1 caches, ensuring no duplicated data could exists.
 The additional latency was due to increased communication of cores that needed data in other L1 caches.
 Overall, performance increased between 22 and 52\%.
 
@@ -34,17 +34,18 @@ However, GPUs have a tendency to deadlock when using lock-based synchronization.
 Fung et al. proposed a hardware transactional memory model for GPUs, called Kilo transactional memory~\cite{Fung2011ISM}.
 Transactional memory works by executing ``transactions'' of code that execute atomically rather than using locks.
 It gives the programmer the illusion that no synchronizations are needed.
-The trade off for this type of approach is that hardware must be implemented.
+The trade off for this type of approach is that additional hardware must be implemented.
 The hardware determines if there were any conflicts when executing the transaction, if there were, the code block is executed again until no conflicts are detected.
 Kilo transactional memory works at the word-level, this is in contrast to other transactional models that work at the cache-line level.
 The authors found that this approach increased performance of most applications.
 
 Cache coherence is the concept that all copies of data in individual caches are consistent.
 Cache coherent models are well established, and many high-level languages depend on these models~\cite{Singh2013}.
-Unfortunately, GPUs lack cache coherence due to their architectural design~\cite{Singh2013}, and applications that rely on coherent caches must disable the L1 cache.
+Unfortunately, GPUs lack cache coherence due to their architectural design~\cite{Singh2013}, and applications that rely on coherent caches must disable the private L1 cache.
 Obviously, disabling the L1 cache to achieve coherence comes at a cost of performance.
 
 Singh et al. investigated a method called ``Temporal Coherence'' that provides coherent L1 caches and can improve execution time of GPGPU applications by 85\%. This is a timestamp based coherence framework, which helps to eliminate coherence traffic caused by 100s of threads accessing memory and helps eliminate protocol races~\cite{Singh2013}.
+However, coherent L1 caches would be gotten implicity with a shared L1 cache design previously mentioned by Ibrahim et al.~\cite{Ibrahim2020}.
 
 One of the many challenges of understanding GPUs is understanding precisely how the memory hierarchy works.
 This is a difficult task, as many GPU manufacturers do not make this information publicly available.
@@ -76,14 +77,13 @@ This problem is due to the GPUs highly parallelized architecture, in which thous
 
 The ideal memory addressing scheme would have row bits change the least, for row buffer locality, while the channel and bank bits should change the most, for uniform memory distribution~\cite{Liu2018}.
 Liu et al. propsed the ``Page Address Entropy'' (PAE) mapping scheme, which fulfills these criteria, is easily translated into hardware with an array of XOR gates, and results in performance gains of around 1.25.
-The key idea of PAE.
 
 Due to the memory performance variability of applications on GPUs, it is often the case that algorithms need specific tuning to perform well on GPUs.
 Liu et al.~\cite{Liu2020} shows this clearly with an example of how to increase performance of Non-deterministic Finite Automata (NFA). NFAs are naturally parallel, though they do not perform well on GPUs. Liu et al. found the main cause of this is excessive data movement and poor-compute utilization. This section will only talk about the data movement findings.
 
 Liu et al. solved the data movement issue by privatizing reads using the GPUs on-chip memory.
 They also made further optimizations that improve the NFA algorithm on the GPU by reducing redundant memory, reducing global memory accesses, and cleverly turning read operations into computations.
-This example shows that often algorithms that would theoretically perform well on the GPU (NFAs), need to be reworked in order to take full advantage of the GPUs highly parallel memory structure.
+This example shows that, often algorithms that would theoretically perform well on the GPU (NFAs), need to be reworked in order to take full advantage of the GPUs highly parallel memory structure.
 
 In summary, GPU memory systems share similarities with CPU memory systems, but also have stark differences.
 Ideas like a hierarchy of memory are similar to a CPU, but the specific policies of the hierarchy of memory, such as a private or public L1 cache, are typically different than a CPU.
