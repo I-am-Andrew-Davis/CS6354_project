@@ -42,10 +42,12 @@
 
 \section{Introduction}
 GPUs are powerful accelerators that are becoming widely used in all aspects of computing, such as machine learning, computational fluid dynamics, image processing, and other general purpose computing on graphics processing units (GPGPU) tasks.
-The underlying architecture, memory models, and simulator tools are similar and distinct from a traditional central processing unit (CPU).
-In this survey of GPUs we will discuss the underlying architecture, memory models, and the current state of the art GPU simulators.
+The underlying architecture, memory models, and simulator tools are both similar and distinct from a traditional central processing unit (CPU).
+In this survey of GPUs, we will discuss the underlying architecture, memory models, and the current state of the art GPU simulators.
 We will also discuss some of the state of the art improvements to the underlying architecture, memory models, and GPU simulators.
 
+The memory models section is organized as follows: an overview of the hierarchy of GPU on chip memory, i.e. caches, shared memory, etc, is discussed, followed by a brief overview of off chip memory, i.e. DRAM.
+Some of the state of the art implementations of GPU memory models to be discussed are: memory-coalescing strategies, private vs shared cache design, synchronization strategies, cache coherence, specific findings of underlying memory hardware, virtual memory, and virtual memory addressing schemes.
 
 \include{architecture}
 \include{memory}
