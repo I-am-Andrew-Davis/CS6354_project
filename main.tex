@@ -49,6 +49,10 @@ We will also discuss some of the state of the art improvements to the underlying
 The memory models section is organized as follows: an overview of the hierarchy of GPU on chip memory, i.e. caches, shared memory, etc, is discussed, followed by a brief overview of off chip memory, i.e. DRAM.
 Some of the state of the art implementations of GPU memory models to be discussed are: memory-coalescing strategies, private vs shared cache design, synchronization strategies, cache coherence, specific findings of underlying memory hardware, virtual memory, and virtual memory addressing schemes.
 
+The simulators section will discuss the importance of investing considerable research effort into developing open-source simulators, examine the current state-of-the-art simulators and highlight the benefits they have provided so far.
+The focus will be on how these simulators need to be updated to model the modern GPUs, with most examples drawn from NVIDIA's ecosystem.
+The overall flow will illustrate how these simulators have been progressively extended, increasing their generalizability and applicability over time.
+
 \include{architecture}
 \include{memory}
 \include{simulators}
@@ -64,6 +68,15 @@ Singh explored a method that enabled cache coherence on the GPU, and found their
 Mei and Chu deliver precise experimental findings of the Fermi, Kepler, and Maxwell GPU architectures that were not disclosed by NVIDIA; these findings are primarily on cache behavior, such as eviction policies and cache line size.
 Pratheek found a virtual memory system design that improves memory performance for GPUs that use MCM technologies.
 Lastly, Liu explored memory addressing modes that perform well on GPUs, these modes are application dependent and take into account an addresses bit entropy region.
+
+Significant innovations in GPU technology comes from the industry, but many of the advancements are not disclosed to the public.
+In order for research efforts to remain impactful, modern GPUs need to be accurately modeled through open-source simulators.
+GPGPU-Sim laid the foundation for most modern GPU simulators, and these simulators use baseline assumptions to fill the knowledge gaps left by the industry.
+However, incorrect baseline assumptions can misdirect research efforts and lead to incorrect conclusions.
+With the increasing complexity of modern GPUs, it has become critical to simulate both detailed cycle-level performance and power models.
+Developing generalized frameworks is essential to keep pace with the rapid evolution GPU hardware.
+Tools like Accel-Sim and Accel-Wattch made significant advancements in this area, serving as game changers in accurately modeling modern GPUs.
+These simulators have proven that oversimplified baseline assumptions can lead to misleading insights, emphasizing the need for more accurate and detailed modeling approaches.
 
 \clearpage
 \appendix
