@@ -1,2 +1,81 @@
 \section{Simulators}
-Placeholder text
+
+Simulators play a huge role in enabling impactful research in the field of GPUs.
+Identifying research gaps, tuning hardware configuration, evaluating the effect of new algorithms/architectures and design space exploration are some of the use cases for simulators.
+While there have been many attempts to build simulators for GPU by multiple research groups, some have been more successful than the others.
+One such simulator that had a long-lasting presence is GPGPU-Sim.
+
+NVIDIA had been able to dominate over other GPU vendors after the release of NVIDIA's CUDA programming model combined with NVIDIA's Parallel Thread eXecution (PTX) virtual ISA, which made it easier for programmers to run parallelized programs.
+Hence, work by Bakhoda et al.~\cite{Bakhoda2009} on extending the GPGPU-Sim to support Cuda made a huge impact on modern GPU research by being the base used by many simulators.
+GPGPU-Sim is a performance simulator capable of giving cycle-level details which is much needed for aggressive research efforts.
+At the very early ages of CUDA evolution, Bakhoda et al.~\cite{Bakhoda2009} evaluates 12 low-performing CUDA programs to identify why they don't perform as expected.
+In their search, they identified that the performance is more sensitive to interconnect bisection bandwidth rather than latency.
+Moreover, it indicated that reducing memory system contentions by running fewer concurrent threads than on-chip resources can improve performance.
+
+GPGPU-Sim was relevant for a very long time, and many researchers extended it to evaluate many modern releases of GPUs.
+A good example for this is the work by Raihan et al.~\cite{Raihan2018} where the functional and timing models were changed to model Tensor Cores.
+With Deep Neural Networks (DNNs) becoming more popular across multiple fields, computational power expected from GPUs were increased.
+Tensor Cores were introduced into GPUs, to compute multi-dimensional matrix calculations in the form of GEMM operations.
+However, the underlying design of the Tensor Cores was not released by NVIDIA.
+Hence, Raihan et al.~\cite{Raihan2018} extended GPGPU-Sim to run applications built with NVIDIA’s CUTLASS library, which is an opensource CUDA C++ template library providing customizable GEMM templates that utilize the Tensor Cores.
+
+However, these open-source simulators are built on numerous baseline assumptions, since the simulators used in the industry or the exact details of these industrial designs are not available to the public~\cite{Khairy2020}.
+In these instances, as there involves a high level of parallelism, researchers try to assume them as blackboxes or as a simplified structures that is far off from the real systems.
+One such detail that NVIDIA has kept discrete, is how their GPU hardware scheduler subdivides CUDA streams into streaming multiprocessors (SMs). 
+Sanudo et al.~\cite{Sanudo2020} explains how assumptions made my most simulators about the scheduling algorithm is wrong.
+For example, a round-robin (RR) block-to-SM distribution policy can be considered for simplicity, but it gets a lot more complicated when there are multiple streams.
+It is shown how this could lead to severe mispredictions of the block execution time.
+When the number of streams increases, the probability of misprediction can go as high as 96\%.
+This severly affects the researcher's ability to get insights from the system timing analysis since the reliability of these models are questionable.
+
+GPUs makes use machine ISAs and virtual ISAs to abstract its hardware complexity.
+NVIDIA's virtual ISA is Parallel Thread eXecution (PTX) and machine ISA is Source and ASSembly (SASS).
+PTX ISA is very well documented and is close to the programming language and is machine independent.
+However, information about the compilers or the more hardware-specific SASS ISA is not openly available.
+This hinders research on optimizing compilers and binary encoding for specific applications.
+NVIDIA provides a closed-source compiler called nvcc that converts PTX code to generate a binary and a closed-source disassembler called cuobjdump to convert the binary to SASS assembly code.
+Still, there's no assembers provided to convert SASS assembly code to binaries.
+Identifying this gap, Hayes et al.~\cite{Hayes2019} developed a framework that automates the creation of an assembler, given the binary.
+This was used to analyze the binary encoding of multiple GPU architectures.
+Unlike the previous attempts, this is a comprehensive and cross-architecture framework useful for general purpose applications.
+
+According to the current trends, the industry is innovating the hardware at a very fast pace, but since most of their designs are proprietory, the research world is having a hard time keeping up with them~\cite{Khairy2020}.
+This is especially the case, when the baseline assumptions made during research is well off.
+Hence, it is crucial to study these industrial design before trying to address a research gap, in order to keep the research still relevant to the time.
+For example, Khairy et al.~\cite{Khairy2020} found that the L1 cache throughput bottleneck no longer exists in modern GPUs, making research techniques on selectively bypassing the L1 cache less relevant.
+
+A main challenge with keeping up with the industry, is the constant changing of their undocumented machine ISA.
+These changes can be drastic, which puts a huge burden on the researchers to add these changes to the open-source simulators to keep them up-to date.
+Accel-Sim~\cite{Khairy2020} tries to address this by introducing a flexible frontend where both virtual and machine ISA is converted to an ISA-independent intermediate representation that can be input to a performance model.
+This functions in two modes; trace-driven and execution-driven modes where machine and virtual ISA codes are used respectively.
+Just supporting trace-based simulations is not enough since they cannot properly evaluate new designs that rely on the data values stored in registers or memory and global synchronization mechanisms.
+
+Going beyond this, Accel-Sim extends GPGPU-Sim's performance model increasing its level of detail, configurability and accuracy.
+This is rigorously validated by cross checking a set of counters outputted by the performance model against the hardware data emitted by NVIDIA's profilers.
+This was able to reduce the cycle error by 79 percentage points for 80 workloads consisting of 1,945 kernel instances, which were the previous benchmarks used.
+It further gave the capability to simulate 60 additional workloads consisting of 11,440 kernel instances from the machine learning benchmark suite Deepbench.
+This comprehensive validation infrastructure was further extended to include a set of targeted GPU microbenchmarks, an automated parameter tuner and an automatic correlation visualizer accelerating the process of modeling new designs using Accel-Sim.
+
+Among many insights gained through Accel-Sim, it also proved that some previously disregarded research areas may have hidden potential.
+As the level of detail of the memory system was improved to match the newer hardware, it revealed that the out-of-order memory accesses can now offer significant performance improvements.
+
+With the widespread adoption of GPUs in the accelerator space, energy efficiency became equally important as performance.
+However, power modelling was not at the same level as performance modelling.
+There weren't any detailed cycle-level power models, and static power calculation was over simplified in existing power models.
+Older GPUs used fewer energy-efficency optimizations, and power models designed based on them can wrongly divert the attention to optimizing components that don't actually need energy optimizations~\cite{Kandiah2021}.
+Modern GPUs have Dynamic Voltage and Frequency Scaling (DVFS).
+They can have powered-down hardware components as well powered-up but inactive components.
+Hence, using a constant for the static power will give huge inaccuracies.
+
+Accel-Wattch~\cite{Kandiah2021} was developed to give a modern approach to power modelling.
+It can be driven by a pure software performance model like Accel-Sim or hardware performance counters commonly found in modern GPUs.
+By being able run using actual silicon gives it the capability of analyzing discrete hardware components without the need for developing performance models for them.
+It manages to capture the cycle-level static and dynamic power, while correctly modelling the effects of DVFS, thread divergence, intra-warp functional unit overlap, variable SM occupancy, and power gating.
+Even though, it was modeled using the NVIDIA Volta GPU architecture, changing the GPU configuration to resemble the Pascal and Turing architectures gave accurate power models without any fine-tuning, proving its suitability for conducting design space explorations.
+
+A more unconventional form of simulation is seen in the memory address entropy analysis by Liu et al.~\cite{Liu2018}.
+To reach optimal performance in DRAMs, the low entropy bits should be mapped to row bit to exploit row buffer locality and high entropy bits should map to channel and bank bits to exploit parallelism.
+When analyzed, entropy distribution for CPUs and GPUs were significantly different.
+CPUs had higher entropy in lower bits, but GPUs showed an entropy valley effect in the lower bits.
+Hence, using CPU-oriented address mappping schemes for GPU workloads will fail to give expected results.
+Liu et al.~\cite{Liu2018} proposes Page Address Entropy (PAE) mapping scheme as the most power efficient address mapping scheme for GPUs.
