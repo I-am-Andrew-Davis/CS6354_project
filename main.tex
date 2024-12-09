@@ -46,6 +46,9 @@ The underlying architecture, memory models, and simulator tools are both similar
 In this survey of GPUs, we will discuss the underlying architecture, memory models, and the current state of the art GPU simulators.
 We will also discuss some of the state of the art improvements to the underlying architecture, memory models, and GPU simulators.
 
+The Architecture section explores GPU structure and optimization techniques, focusing on key components such as the Shader Core and hierarchical memory. It examines performance bottlenecks like memory access issues, resource imbalance, and branch divergence, and discusses solutions including scheduling optimizations and Thread Block Compaction (TBC).
+It also highlights tools for enhancing GPU performance, such as GASS (an open-source GPU compiler), a GPU ISA decoding platform, Xscope (a floating-point exception detection framework), and neural network acceleration methods like VectorSparse and Tensor Core.
+
 The memory models section is organized as follows: an overview of the hierarchy of GPU on chip memory, i.e. caches, shared memory, etc, is discussed, followed by a brief overview of off chip memory, i.e. DRAM.
 Some of the state of the art implementations of GPU memory models to be discussed are: memory-coalescing strategies, private vs shared cache design, synchronization strategies, cache coherence, specific findings of underlying memory hardware, virtual memory, and virtual memory addressing schemes.
 
